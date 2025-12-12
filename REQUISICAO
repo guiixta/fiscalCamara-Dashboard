@@ -1,0 +1,13 @@
+🎯 Objetivos do Dashboard
+
+Seu dashboard deve responder visualmente às seguintes perguntas de negócio (KPIs):
+
+    Quanto foi gasto no total no período selecionado? (Um "Card" com o valor total).
+
+    Qual a evolução dos gastos ao longo do tempo? Existem picos em meses específicos?
+
+    Para onde o dinheiro vai? Qual categoria de despesa consome a maior fatia do orçamento (ex: Passagens vs. Divulgação)?
+
+    Ranking dos Partidos: Qual partido tem a maior média de gastos por deputado?
+
+    Top 5 Gastadores: Quem são os deputados que mais utilizaram a cota no período?
