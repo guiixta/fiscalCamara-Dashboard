@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 
 
 def load_dataBase():
-    df = pd.read_csv('');
+    df = pd.read_csv('https://raw.githubusercontent.com/guiixta/fiscalCamara-Dashboard/refs/heads/main/tabelaDespesa.csv');
     return df;
 
 df = load_dataBase();

@@ -4,10 +4,29 @@ Seu dashboard deve responder visualmente às seguintes perguntas de negócio (KP
 
     Quanto foi gasto no total no período selecionado? (Um "Card" com o valor total).
 
+    *FILTRO DE TEMPO MOSTRANDO O TOTAL GASTO (SUM()) DE UMA DATA A OUTRA [GRAFICO LINHA E SLIDE & CARD SOLICITADO]*
+
     Qual a evolução dos gastos ao longo do tempo? Existem picos em meses específicos?
+
+    *MOSTRAR GASTOS TOTAIS COM AO LONGO DO TEMPO DO MENOR AO MAIOR (SUM() & MOSTRAR) e exibir informação do mês que mais gastou em todo o tempo [GRAFICO BARRAS OU LINHAS & CARD EXIBIR]*
 
     Para onde o dinheiro vai? Qual categoria de despesa consome a maior fatia do orçamento (ex: Passagens vs. Divulgação)?
 
+    *MOSTRAR QUAL tipo_despesa E MAIS RECORRENTE [CARD]*
+
     Ranking dos Partidos: Qual partido tem a maior média de gastos por deputado?
 
+    *REALIZAR MEDIA DE GASTOS POR DEPUTADO [SOMAR QUANTIDADE DE DEPUTADOS E DIVIDIR PELO VALOR GASTO ANUAL E MOSTRAR COMO PARTIDO]*
+
     Top 5 Gastadores: Quem são os deputados que mais utilizaram a cota no período?
+    
+    *MOSTRAR DEPUTADOS QUE MAIS GASTARAM EM UM PERIODO DE TEMPO [GRAFICO BARRAS E SLIDE, PODE SER UM LATERAL. ALEM DISSO PODE-SE EXIBIR ESSA INFORMAÇÃO EM TEXTO]*
+
+
+
+
+  
+
+
+
+
