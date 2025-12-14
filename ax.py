@@ -6,3 +6,9 @@ def load_dataBase():
     return df;
 
 df = load_dataBase();
+
+df['data_emissao'] = pd.to_datetime(df['data_emissao']);
+
+
+print(df['data_emissao'])
+

@@ -8,11 +8,11 @@ Seu dashboard deve responder visualmente às seguintes perguntas de negócio (KP
 
     Qual a evolução dos gastos ao longo do tempo? Existem picos em meses específicos?
 
-    *MOSTRAR GASTOS TOTAIS COM AO LONGO DO TEMPO DO MENOR AO MAIOR (SUM() & MOSTRAR) e exibir informação do mês que mais gastou em todo o tempo [GRAFICO BARRAS OU LINHAS & CARD EXIBIR]*
+    *MOSTRAR GASTOS TOTAIS COM AO LONGO DO TEMPO DO MENOR AO MAIOR [DE JANEIRO A DEZEMBRO] (SUM() & MOSTRAR) e exibir informação do mês que mais gastou em todo o tempo [GRAFICO BARRAS OU LINHAS & CARD EXIBIR]*
 
     Para onde o dinheiro vai? Qual categoria de despesa consome a maior fatia do orçamento (ex: Passagens vs. Divulgação)?
 
-    *MOSTRAR QUAL tipo_despesa E MAIS RECORRENTE [CARD]*
+    *MOSTRAR QUAL tipo_despesa E MAIOR [GRAFICO PIZZA]*
 
     Ranking dos Partidos: Qual partido tem a maior média de gastos por deputado?
 
@@ -23,6 +23,45 @@ Seu dashboard deve responder visualmente às seguintes perguntas de negócio (KP
     *MOSTRAR DEPUTADOS QUE MAIS GASTARAM EM UM PERIODO DE TEMPO [GRAFICO BARRAS E SLIDE, PODE SER UM LATERAL. ALEM DISSO PODE-SE EXIBIR ESSA INFORMAÇÃO EM TEXTO]*
 
 
+
+-------------------------------------------------------------------------
+
+Essa é uma dúvida excelente e crucial para a usabilidade (UX) do seu dashboard.
+
+Vou ser direto: Todos os seus KPIs devem sofrer o filtro do Slide de Tempo.
+
+Como você colocou o Slider na barra lateral esquerda ("Configurações"), você estabeleceu visualmente que aquela é a "Torre de Comando". O usuário espera que, ao mexer ali, tudo o que está na tela obedeça.
+
+Aqui está o raciocínio para cada um dos seus KPIs, para você entender a lógica por trás:
+1. Card de Valor Total (KPI 1)
+
+    Deve filtrar? SIM.
+
+    Por que? Se eu arrasto o slide para ver apenas "Fevereiro", o Card precisa mostrar apenas o valor gasto em Fevereiro. Se ele continuar mostrando o total do ano (Geral), vai confundir o usuário, pois os gráficos ao lado mostrarão dados menores e a conta não vai fechar na cabeça dele.
+
+2. Evolução Temporal / Linha (KPI 2)
+
+    Deve filtrar? SIM.
+
+    Por que? Esse é onde a maioria fica na dúvida.
+
+        Se o usuário seleciona de Jan a Jun no slide, o gráfico de linha deve mostrar o eixo X apenas de Jan a Jun.
+
+        Isso permite que o usuário dê um "zoom" em períodos específicos para ver detalhes que ficariam espremidos na visão do ano todo.
+
+        Nota: Se o usuário selecionar apenas 1 mês (ex: Jan a Jan), o gráfico vai virar um ponto ou uma barra única. Isso é o comportamento esperado e correto.
+
+3. Para onde vai o dinheiro / Categorias (KPI 3)
+
+    Deve filtrar? SIM.
+
+    Por que? O perfil de gastos muda. Em Janeiro (recesso), pode haver mais gastos com passagens aéreas voltando para Brasília. Em Outubro (eleição), pode haver mais gastos com Divulgação. O gráfico de pizza/barras deve refletir a "fatia" do período selecionado.
+
+4. Ranking Partidos e Top Deputados (KPI 4 e 5)
+
+    Deve filtrar? SIM.
+
+    Por que? Um deputado pode ter gasto R$ 500 mil em Janeiro e nada no resto do ano. Se eu filtrar "Março a Dezembro", esse deputado não deve aparecer no Top 5, pois ele não gastou nada nesse período. O ranking precisa ser dinâmico para ser justo com o recorte de tempo.
 
 
   
