@@ -1,6 +1,7 @@
 import pandas as pd;
 import dash
 from dash import Dash, dcc, html, Input, Output, callback
+from pandas.core.algorithms import rank
 import plotly.express as px
 
 def load_dataBase():
@@ -58,12 +59,10 @@ linksExternos = ['https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4']
 
 app = Dash(__name__, external_scripts=linksExternos, title="O Fiscal da Câmara")
 
-
 app.layout = html.Div(className="w-dvw h-dvh bg-lime-400 flex", children=[
 
     dcc.Store(id="store-filtro-tempo"),
 
-    
 
     html.Div(className="w-[40%] bg-lime-950", children=[
         html.Div(className='flex flex-col p-2 gap-2 justify-center items-center', children=[
@@ -84,13 +83,13 @@ app.layout = html.Div(className="w-dvw h-dvh bg-lime-400 flex", children=[
                 value=[min_mes, max_mes], 
                 marks=marksData, 
                 className="mt-4, py-2",
-                id='slider-tempo'
+                id='slider-tempo' 
             )
         ])
     ]),
 
     html.Div(className="w-[60%]", children=[
-        html.Div(className="w-full overflow-y-scroll overflow-x-hidden max-h-[80%]", children=[
+        html.Div(className="w-full overflow-y-scroll overflow-x-hidden max-h-[99%]", children=[
            html.Div(className='Cards flex gap-2 p-1 my-2 w-full', children=[
                 html.Div(className="bg-white p-2 flex flex-col justify-center items-center w-[50%] border border-lime-950", children=[
                     html.H1(children='Gasto Total', className="text-sm"),
@@ -103,12 +102,109 @@ app.layout = html.Div(className="w-dvw h-dvh bg-lime-400 flex", children=[
                 ])
            ]),
 
-           html.Div(className='Grafico w-full px-1', children=[
-                dcc.Graph(id="evolucao-gastos-grafico")
+           html.Div(className='Graficos w-full px-1 flex flex-col gap-2', children=[
+                dcc.Graph(id="evolucao-gastos-grafico"),
+                dcc.Graph(id="tipo-gastos-grafico"),
+                dcc.Graph(id="media-partido-grafico")
            ]) 
         ])
     ])
 ])
+
+
+
+@callback(
+    Output('media-partido-grafico', 'figure'),
+    Input('store-filtro-tempo', 'data')
+)
+def MediaGastosPartido(data):
+    if not data:
+        return {}
+
+    dff = pd.DataFrame(data);
+ 
+
+    ranking_partidos = dff.groupby(dff['sigla_partido']).agg({
+        'valor_liquido': 'sum',
+        'nome_parlamentar': 'nunique'
+    }).reset_index()
+
+    ranking_partidos['media'] = ranking_partidos['valor_liquido'] / ranking_partidos['nome_parlamentar'];
+
+    ranking_partidos = ranking_partidos.sort_values(by='media', ascending=True);
+
+    grfBarras = px.bar(
+        ranking_partidos, 
+        x='sigla_partido', 
+        y='media', 
+        color='sigla_partido', # Cada coluna uma cor
+        title="Gasto Médio por Parlamentar", 
+        labels={'sigla_partido': 'Partido', 'media': 'Média de Gasto (R$)'},
+        color_discrete_sequence=px.colors.qualitative.Bold # Paleta de cores vivas
+    )
+
+    cor_fundo = '#1a2e05'  # lime-950
+    cor_linha = '#a3e635'  # lime-400
+    cor_texto = '#ecfccb'  # lime-100
+
+    grfBarras.update_layout(
+        paper_bgcolor=cor_fundo,
+        plot_bgcolor=cor_fundo,
+        font_color=cor_texto,
+        title_font_color=cor_linha,
+        showlegend=False # Remove a legenda lateral pois é redundante
+    )
+
+    # Grade sutil igual ao gráfico de linha
+    grfBarras.update_yaxes(gridcolor='rgba(163, 230, 53, 0.1)') 
+    grfBarras.update_xaxes(showgrid=False)    
+
+    return grfBarras
+
+@callback(
+    Output('tipo-gastos-grafico', 'figure'),
+    Input('store-filtro-tempo', 'data')
+)
+def CategoriasGastos(data):
+    if not data:
+        return {}
+
+    dff  = pd.DataFrame(data);
+
+    gastos_por_categoria = dff.groupby(dff['tipo_despesa'])['valor_liquido'].sum().reset_index()
+
+    grfPizza = px.pie(
+        gastos_por_categoria, 
+        values="valor_liquido", 
+        names="tipo_despesa", 
+        title="Para Onde Vai o Dinheiro?",
+        color_discrete_sequence=px.colors.qualitative.Bold,
+        hole=0.4,
+        labels={
+            'valor_liquido': 'Valor (R$)',
+            'tipo_despesa': 'Tipo'
+        }
+    )
+
+    cor_fundo = '#002c22' #1f3208
+    cor_titulo = '#a3e635'
+    cor_texto = '#ecfccb'
+
+    grfPizza.update_layout(
+        paper_bgcolor=cor_fundo,
+        font_color=cor_texto,
+        title_font_color=cor_titulo,
+        legend=dict(
+            font=dict(color=cor_texto)
+        )
+    )
+
+    grfPizza.update_traces(
+        textinfo='percent',
+        marker=dict(line=dict(color=cor_fundo, width=2))
+    )
+
+    return grfPizza
 
 @callback(
     Output('gasto-total-card', 'children'),

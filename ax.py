@@ -7,8 +7,9 @@ def load_dataBase():
 
 df = load_dataBase();
 
-df['data_emissao'] = pd.to_datetime(df['data_emissao']);
+ranking_partidos = df.groupby(df['sigla_partido']).agg({
+        'valor_liquido': 'sum',
+        'nome_parlamentar': 'nunique'
+}).reset_index()
 
-
-print(df['data_emissao'])
-
+print(ranking_partidos);

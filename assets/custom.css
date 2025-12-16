@@ -1,0 +1,38 @@
+/* A trilha colorida (parte selecionada) */
+#slider-tempo .rc-slider-track {
+    background-color: #a3e635 !important;
+}
+
+/* O trilho de fundo (parte não selecionada) */
+#slider-tempo .rc-slider-rail {
+    background-color: #365314 !important;
+}
+
+/* As bolinhas de arrastar */
+#slider-tempo .rc-slider-handle {
+    background-color: #ecfccb !important;
+    border-color: #a3e635 !important;
+    width: 20px !important;
+    height: 20px !important;
+    opacity: 1 !important;
+    margin-top: -8px !important;
+}
+
+.rc-slider-dot-active{
+    border-color: #ecfccb  !important
+}
+
+.rc-slider-handle{
+   border: solid 2px #a3e635 !important
+}
+
+.rc-slider-handle-dragging.rc-slider-handle-dragging.rc-slider-handle-dragging{
+  box-shadow: 0 0 0 2px #FFFFFF !important
+}
+
+/* Efeito ao passar o mouse na bolinha */
+#slider-tempo .rc-slider-handle:hover, 
+#slider-tempo .rc-slider-handle:active {
+    border-color: #84cc16 !important;
+    box-shadow: 0px 0px 5px #a3e635 !important;
+}
