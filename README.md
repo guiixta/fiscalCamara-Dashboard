@@ -76,6 +76,7 @@ python main.py
 ```
 
 O dashboard estará disponível no seu navegador em: 
+
 📂 Estrutura do Projeto
 
 fiscalCamara-Dashboard/
