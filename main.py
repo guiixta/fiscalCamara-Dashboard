@@ -43,12 +43,11 @@ def filtrar_dataframe(tempo, estados, partidos):
 
     if estados:
         if isinstance(estados, str): estados = [estados]
-        dff = dff[dff['sigla_uf'].isin(estados)]
+        dff = dff[dff['sigla_uf'].isin(estados)] #type: ignore
 
     if partidos:
         if isinstance(partidos, str): partidos = [partidos]
-        dff = dff[dff['sigla_partido'].isin(partidos)]
-        
+        dff = dff[dff['sigla_partido'].isin(partidos)]  #type: ignore       
     return dff
 
 # Variaveis para filtros globais
@@ -138,7 +137,7 @@ app.layout = html.Div(className="w-dvw h-dvh bg-lime-400 flex", children=[
     html.Div(className="w-[60%]", children=[
         html.Div(className="w-full overflow-y-scroll overflow-x-hidden max-h-[99%]", children=[
            html.Div(className='w-full flex flex-col justify-center items-center gap-2 mt-2', children=[
-                html.H1(className='font-bold text-3xl text-center cursor-default text-lime-950', children='Análise de Despesas da Cota Parlamentar'),
+                html.H1(className='font-bold text-3xl text-center cursor-default text-lime-950', children='Análise de Despesas da Cota Parlamentar (2024)'),
                 html.Span(className='w-full h-[1px] bg-lime-950')
            ]), 
            html.Div(className='Cards flex gap-2 p-1 my-2 w-full', children=[
@@ -172,10 +171,10 @@ app.layout = html.Div(className="w-dvw h-dvh bg-lime-400 flex", children=[
 def TopParlamentar(tempo, estados, partidos):
     dff = filtrar_dataframe(tempo, estados, partidos)
     
-    if dff.empty:
+    if dff.empty: #type: ignore
         return {}
     
-    ranking_parlamentar = dff.groupby(dff['nome_parlamentar']).agg({
+    ranking_parlamentar = dff.groupby(dff['nome_parlamentar']).agg({ #type: ignore
         'sigla_partido': 'first',
         'valor_liquido': 'sum'
     }).reset_index()
@@ -225,10 +224,10 @@ def TopParlamentar(tempo, estados, partidos):
 def MediaGastosPartido(tempo, estados, partidos):
     dff = filtrar_dataframe(tempo, estados, partidos)
 
-    if dff.empty:
+    if dff.empty: #type: ignore
         return {}
 
-    ranking_partidos = dff.groupby(dff['sigla_partido']).agg({
+    ranking_partidos = dff.groupby(dff['sigla_partido']).agg({ #type: ignore 
         'valor_liquido': 'sum',
         'nome_parlamentar': 'nunique'
     }).reset_index()
@@ -275,10 +274,10 @@ def MediaGastosPartido(tempo, estados, partidos):
 def CategoriasGastos(tempo, estados, partidos):
     dff = filtrar_dataframe(tempo, estados, partidos)
     
-    if dff.empty:
+    if dff.empty:#type: ignore
         return {}
 
-    gastos_por_categoria = dff.groupby(dff['tipo_despesa'])['valor_liquido'].sum().reset_index()
+    gastos_por_categoria = dff.groupby(dff['tipo_despesa'])['valor_liquido'].sum().reset_index() #type: ignore
 
     grfPizza = px.pie(
         gastos_por_categoria, 
@@ -326,18 +325,17 @@ def CategoriasGastos(tempo, estados, partidos):
 def CardsEvolucao(tempo, estados, partidos):
     dff = filtrar_dataframe(tempo, estados, partidos)
     
-    if dff.empty:
+    if dff.empty: #type: ignore
         return "R$ 0,00", "-", {}
 
-    mes_min = dff['data_emissao'].dt.month.min()
-    mes_max = dff['data_emissao'].dt.month.max()
+    mes_min = dff['data_emissao'].dt.month.min() #type: ignore
+    mes_max = dff['data_emissao'].dt.month.max() #type: ignore
 
     valor_total = dff['valor_liquido'].sum()
 
     gasto_total_card = formatar_moeda(valor_total)
 
-    gastos_por_mes = dff.groupby(dff['data_emissao'].dt.month)['valor_liquido'].sum().reset_index()
-
+    gastos_por_mes = dff.groupby(dff['data_emissao'].dt.month)['valor_liquido'].sum().reset_index() #type: ignore
     if not gastos_por_mes.empty:
         indice_maior = gastos_por_mes['valor_liquido'].idxmax()
         mes_maior = gastos_por_mes.loc[indice_maior, 'data_emissao']
@@ -390,7 +388,7 @@ def PartidosPorEstado(estado):
 
     df_filtrado = df[df['sigla_uf'].isin(estado)]
 
-    partidos_disponiveis = sorted(df_filtrado['sigla_partido'].unique())
+    partidos_disponiveis = sorted(df_filtrado['sigla_partido'].unique()) #type: ignore
 
     return partidos_disponiveis
 
