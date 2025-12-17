@@ -42,7 +42,7 @@ O sistema permite filtrar os gastos por **Estado (UF)**, **Partido** e **Períod
 
 ## ⚙️ Funcionalidades Técnicas
 
-* **Filtros Globais:** Utilização de `dcc.Store` para gerenciamento de estado, permitindo que um único filtro (Slider de Tempo, Dropdowns) controle todos os gráficos simultaneamente sem processamento redundante.
+* **Filtros Otimizados:** Filtragem direta do DataFrame em memória via Pandas dentro de cada callback. Essa abordagem elimina o tráfego de dados pesados entre cliente/servidor, garantindo alta performance e compatibilidade com os limites de payload da Vercel.
 * **Design Responsivo:** Layout construído com classes utilitárias do TailwindCSS.
 * **KPIs Dinâmicos:** Cards que calculam totais e picos mensais em tempo real.
 * **Formatação Brasileira:** Tratamento de moedas (R$) e datas para o padrão PT-BR.
