@@ -13,7 +13,6 @@
 ## 📸 Preview
 
 ![Dashboard Preview](./assets/preview.png)
-*(Dica: Tire um print da tela do seu dashboard, salve como 'preview.png' na pasta assets e a imagem aparecerá aqui)*
 
 ---
 
@@ -76,7 +75,7 @@ pip install dash pandas plotly
 python main.py
 ```
 
-O dashboard estará disponível no seu navegador em: http://127.0.0.1:8050/
+O dashboard estará disponível no seu navegador em: 
 📂 Estrutura do Projeto
 
 fiscalCamara-Dashboard/
