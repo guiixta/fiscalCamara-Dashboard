@@ -2,6 +2,7 @@ import pandas as pd;
 import dash
 from dash import Dash, dcc, html, Input, Output, callback
 from pandas.core.algorithms import rank
+from pandas.core.dtypes.common import classes
 import plotly.express as px
 
 def load_dataBase():
@@ -55,17 +56,19 @@ estados = sorted(df['sigla_uf'].dropna().unique());
 
 
 linksExternos = ['https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4']
+estilos_externos = ['https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css']
 
 
-app = Dash(__name__, external_scripts=linksExternos, title="O Fiscal da Câmara")
+app = Dash(__name__, external_scripts=linksExternos, external_stylesheets=estilos_externos, title="Análise de Despesas da Cota Parlamentar - Dashboard")
 
 app.layout = html.Div(className="w-dvw h-dvh bg-lime-400 flex", children=[
 
+    
     dcc.Store(id="store-filtro-tempo"),
 
 
-    html.Div(className="w-[40%] bg-lime-950", children=[
-        html.Div(className='flex flex-col p-2 gap-2 justify-center items-center', children=[
+    html.Div(className="w-[40%] bg-lime-950 flex flex-col", children=[
+        html.Div(className='flex flex-col gap-2 mt-4 justify-center items-center', children=[
             html.H1(className='font-bold text-white text-xl', children='Configurações'),
 
             html.Span(className="w-full h-[1px] bg-lime-400")
@@ -85,11 +88,55 @@ app.layout = html.Div(className="w-dvw h-dvh bg-lime-400 flex", children=[
                 className="mt-4, py-2",
                 id='slider-tempo' 
             )
+        ]),
+
+        html.Div(className='w-full flex flex-col justify-center items-center mt-auto pb-4', children=[
+            html.Span(className='w-full h-[1px] bg-lime-400'),
+            html.Div(className='flex gap-1 mt-1', children=[
+                html.H1(className='text-white cursor-default text-md', children='Fontes:'),
+                html.A(className='decoration-none mr-2', href='https://basedosdados.org/dataset/3d388daa-2d20-49eb-8f55-6c561bef26b6?table=53b059b2-d2f7-4588-9b72-6d14149aa8e4', target='_blank', children=[
+                    html.Img(className='w-auto h-6', src='./assets/basedosdados.png')
+                ]),
+                html.Div(className='relative flex flex-col items-center', children=[
+     
+                    html.Span(className='text-white font-bold cursor-default text-md peer underline', id='me', children='guiixta'),
+ 
+                    html.Div(
+                        id='painelRedes', 
+                        className="""
+                            hidden peer-hover:flex hover:flex 
+                            flex-col absolute bottom-full left-1/2 -translate-x-1/2 z-50
+                            w-max
+                        """, 
+                        children=[
+                            html.Div(className='bg-black border border-white rounded p-2 flex flex-col gap-1', children=[
+                                html.Span(className='text-white font-bold text-sm cursor-default whitespace-nowrap', children='Redes sociais'),
+                                
+                                html.Div(className='flex gap-1 justify-center items-center', children=[
+                                    html.A(className="decoration-white no-underline", href='https://github.com/guiixta/', target='_blank', children=[
+                                        html.I(className='bi bi-github hover:text-neutral-500 cursor-pointer text-white')
+                                    ]),
+                                    html.A(className="decoration-white no-underline", href='https://linkedin.com/in/guilherme-ferreira-2b9a302a8', target='_blank', children=[
+                                        html.I(className='bi bi-linkedin hover:text-neutral-500 cursor-pointer text-white')
+                                    ]),
+                                    html.A(className="decoration-white no-underline", href='mailto:guiferreirapessoa3@gmail.com', target='_blank', children=[
+                                        html.I(className='bi bi-envelope-at-fill hover:text-neutral-500 cursor-pointer text-white')
+                                    ])
+                                ])
+                            ])
+                        ]
+                    )
+                ]) #fimPainle
+            ])
         ])
     ]),
 
     html.Div(className="w-[60%]", children=[
         html.Div(className="w-full overflow-y-scroll overflow-x-hidden max-h-[99%]", children=[
+           html.Div(className='w-full flex flex-col justify-center items-center gap-2 mt-2', children=[
+                html.H1(className='font-bold text-3xl text-center cursor-default text-lime-950', children='Análise de Despesas da Cota Parlamentar'),
+                html.Span(className='w-full h-[1px] bg-lime-950')
+           ]), 
            html.Div(className='Cards flex gap-2 p-1 my-2 w-full', children=[
                 html.Div(className="bg-white p-2 flex flex-col justify-center items-center w-[50%] border border-lime-950", children=[
                     html.H1(children='Gasto Total', className="text-sm"),
@@ -105,13 +152,67 @@ app.layout = html.Div(className="w-dvw h-dvh bg-lime-400 flex", children=[
            html.Div(className='Graficos w-full px-1 flex flex-col gap-2', children=[
                 dcc.Graph(id="evolucao-gastos-grafico"),
                 dcc.Graph(id="tipo-gastos-grafico"),
-                dcc.Graph(id="media-partido-grafico")
+                dcc.Graph(id="media-partido-grafico"),
+                dcc.Graph(id='top5-parlamentar-grafico')
            ]) 
         ])
     ])
 ])
 
+@callback(
+    Output('top5-parlamentar-grafico', 'figure'),
+    Input('store-filtro-tempo', 'data')
+)
+def TopParlamentar(data):
+    if not data:
+        return {}
+    
+    dff = pd.DataFrame(data);
 
+    ranking_parlamentar = dff.groupby(dff['nome_parlamentar']).agg({
+        'sigla_partido': 'first',
+        'valor_liquido': 'sum'
+    }).reset_index();
+
+    ranking_parlamentar['nome_parlamentar'] = ranking_parlamentar['nome_parlamentar'].astype(str) + ' - ' + ranking_parlamentar['sigla_partido'].astype(str) 
+
+    ranking_parlamentar = ranking_parlamentar.sort_values(by='valor_liquido', ascending=False).head(5);
+    ranking_parlamentar.sort_values(by='valor_liquido', ascending=True)
+
+    grfBarras = px.bar(ranking_parlamentar, y='nome_parlamentar', x='valor_liquido', orientation='h', title='Top 5: Parlamentares com Maior Gasto', labels={
+        'nome_parlamentar': 'Parlamentar',
+        'valor_liquido': 'Valor Gasto (R$)'
+    }, color='nome_parlamentar', color_discrete_sequence=px.colors.qualitative.Bold)
+
+    cor_fundo = '#002c22' #1f3208
+    cor_titulo = '#a3e635'
+    cor_texto = '#ecfccb'
+
+    grfBarras.update_layout(
+        paper_bgcolor=cor_fundo,
+        plot_bgcolor=cor_fundo,
+        font_color=cor_texto,
+        title_font_color=cor_titulo,
+        showlegend=False, # Remove a legenda lateral pois os nomes já estão no eixo Y
+        margin=dict(t=40, r=20, l=0, b=0),
+        xaxis=dict(showgrid=False, showticklabels=False), # Limpa o eixo X
+        yaxis=dict(title=None) # Remove o título "Parlamentar" para ganhar espaço
+    )
+
+    # Adiciona os valores dentro das barras para facilitar a leitura
+    grfBarras.update_traces(
+        texttemplate='R$ %{value:.2s}', # Formata valor abreviado (Ex: 600k)
+        textposition='inside',
+        insidetextanchor='end',
+        marker=dict(line=dict(color=cor_fundo, width=1)) # Borda fina para separar
+    )
+    
+    
+
+    return grfBarras
+
+
+    
 
 @callback(
     Output('media-partido-grafico', 'figure'),
@@ -181,7 +282,7 @@ def CategoriasGastos(data):
         color_discrete_sequence=px.colors.qualitative.Bold,
         hole=0.4,
         labels={
-            'valor_liquido': 'Valor (R$)',
+            'valor_liquido': 'Valor Gasto (R$)',
             'tipo_despesa': 'Tipo'
         }
     )
@@ -240,7 +341,7 @@ def CardsEvolucao(data):
 
     grf_linhas = px.line(gastos_por_mes, x='mes_nome', y='valor_liquido', title=f'Evolução dos Gastos ({mapa_meses.get(mes_min)} - {mapa_meses.get(mes_max)})', labels={
         'mes_nome': 'Período',
-        'valor_liquido': 'Valor Gastos (R$)'
+        'valor_liquido': 'Valor Gasto (R$)'
     }, markers=True)
 
     # Definindo as cores manualmente para bater com o Tailwind
