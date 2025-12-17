@@ -1,5 +1,6 @@
 # 🏛️ O Fiscal da Câmara - Dashboard de Despesas Parlamentares
 
+[![Deploy Vercel](https://img.shields.io/badge/Acesse%20o%20Demo-Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://fiscal-camara-dashboard.vercel.app/)
 ![Badge em Desenvolvimento](http://img.shields.io/static/v1?label=STATUS&message=CONCLUIDO&color=GREEN&style=for-the-badge)
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 ![Dash](https://img.shields.io/badge/dash-008DE4?style=for-the-badge&logo=dash&logoColor=white)
@@ -75,13 +76,13 @@ pip install dash pandas plotly
 python main.py
 ```
 
-O dashboard estará disponível no seu navegador em: 
+O dashboard estará disponível no seu navegador em: http://127.0.0.1:8050/
 
 📂 Estrutura do Projeto
 
 fiscalCamara-Dashboard/
 │
-├── assets/              # Imagens e ícones estáticos
+├── assets/ # Imagens e ícones estáticos
 │   ├── basedosdados.png
 │   └── preview.png
 │
