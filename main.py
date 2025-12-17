@@ -61,6 +61,7 @@ estilos_externos = ['https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bo
 
 app = Dash(__name__, external_scripts=linksExternos, external_stylesheets=estilos_externos, title="Análise de Despesas da Cota Parlamentar - Dashboard")
 
+server = app.server
 app.layout = html.Div(className="w-dvw h-dvh bg-lime-400 flex", children=[
 
     
