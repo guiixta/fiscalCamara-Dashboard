@@ -80,9 +80,10 @@ O dashboard estará disponível no seu navegador em: http://127.0.0.1:8050/
 
 📂 Estrutura do Projeto
 
+```text
 fiscalCamara-Dashboard/
 │
-├── assets/ # Imagens e ícones estáticos
+├── assets/              # Imagens e ícones estáticos
 │   ├── basedosdados.png
 │   └── preview.png
 │
@@ -90,7 +91,7 @@ fiscalCamara-Dashboard/
 ├── tabelaDespesa.csv    # Base de dados (ou link direto no código)
 ├── requirements.txt     # Lista de dependências
 └── README.md            # Documentação do projeto
-
+```
 📊 Fonte dos Dados
 
 Os dados foram extraídos da tabela br_camara_dados_abertos.cota_parlamentar através da iniciativa Base dos Dados.
